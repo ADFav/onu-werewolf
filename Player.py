@@ -12,9 +12,6 @@ class Player:
         try:
             self.game = Game.allGames[gameID]
             self.game.addPlayer(self)
-            return 0
         except KeyError:
             print "I'm sorry, there is no game with that ID, please try again"
-            return -1
-            
     

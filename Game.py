@@ -33,7 +33,8 @@ class Game:
             print player
         return 0
         
-    def dealPlayerCard(self,player,card):
+    def dealPlayerCard(self,player):
+        card = self.deck.dealOneCard()
         player.initialCard = card
         player.finalCard   = card
         card.cardholder = player

@@ -2,8 +2,8 @@ from Card import *
 import random
 
 class Deck:
-    possibleCards = [Werewolf(), Werewolf(), Minion(), Drunk(), Seer(), Villager(),Villager(),Villager(),Mason(),Mason(),Hunter(),Tanner(),Robber(),Troublemaker(),Insomniac()]
     def __init__(self):
+        self.possibleCards = [Werewolf(), Werewolf(), Minion(), Drunk(), Seer(), Villager(),Villager(),Villager(),Mason(),Mason(),Hunter(),Tanner(),Robber(),Troublemaker(),Insomniac()]
         self.cards = []
         self.pocket = {"Left":None, "Middle":None, "Right":None}
         self.dealCount = 0
@@ -15,9 +15,7 @@ class Deck:
         self.cards.remove(card)
     
     def randomHand(self,numCards):
-        return random.sample(Deck.possibleCards,numCards)
-        # for card in self.cards:
-        #     print card.name 
+        return random.sample(self.possibleCards,numCards)
     
     def shuffle(self):
         random.shuffle(self.cards)
@@ -27,8 +25,6 @@ class Deck:
         return self.cards[self.dealCount-1]
     
     def fillPocket(self):
-        self.pocket["Left"] = self.dealOneCard()
+        self.pocket["Left"]   = self.dealOneCard()
         self.pocket["Middle"] = self.dealOneCard()
-        self.pocket["Right"] = self.dealOneCard()
-    
-        
+        self.pocket["Right"]  = self.dealOneCard()
