@@ -48,6 +48,10 @@ class Card:
             print "Not a valid choice!"
             return self.selectPocket(text,notThisCard)
 
+class Tanner(Card):        
+    def __init__(self):
+        Card.__init__(self,"Tanner","Tanner")
+
 class Villager(Card):
     def __init__(self):
         Card.__init__(self,"Villager","Villager") 
@@ -56,16 +60,12 @@ class Hunter(Card):
     def __init__(self):
         Card.__init__(self,"Hunter","Villager")
 
-class Tanner(Card):        
-    def __init__(self):
-        Card.__init__(self,"Tanner","Tanner")
-        
 class Mason(Card):
     def __init__(self):
         Card.__init__(self,"Mason","Villager")
     
     def performNightAction(self):
-        otherMason = {name:player for name,player in self.game().players.iteritems() if player.initialCard.name == "Mason" and name != self.cardholder.name}.keys()
+        otherMason = [player.name for player in self.game().findCardholders("Mason") if player.name != self.cardholder.name]
         if otherMason == []:
             self.cardholder.knowledge = "Sorry, there is no other mason in the game"
         else:
@@ -125,10 +125,10 @@ class Drunk(Card):
         mycard = self.cardholder.finalCard
         endpoint = self.deck().pocket[self.params["endpoint"]]
         
-        self.cardholder.finalcard = endpoint
+        self.cardholder.finalCard = endpoint
         self.deck().pocket[self.params["endpoint"]] = mycard
         
-        self.knowledge = "You switched your card with the " + self.params["endpoint"] + " center card."
+        self.cardholder.knowledge = "You switched your card with the " + self.params["endpoint"] + " center card."
     
 
 class Insomniac(Card):
@@ -171,7 +171,7 @@ class Werewolf(Card):
     def performNightAction(self):
         otherWerewolves = [player.name for player in self.game().findCardholders("Werewolf") if player.name != self.cardholder.name]
         if len(otherWerewolves) == 0:
-            self.cardholder.knowledge = "There are no other werewolves in this game. When you looked in the center, you saw the " + self.deck().pocket[self.params["pocket card"]].name + " card"
+            self.cardholder.knowledge = "There are no other werewolves in this game. When you looked at the " + self.params["pocket card"] + " center, you saw the " + self.deck().pocket[self.params["pocket card"]].name + " card"
         elif len(otherWerewolves) == 1:
             self.cardholder.knowledge = "The only other werewolf is " + otherWerewolves[0]
         else:
