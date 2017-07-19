@@ -5,7 +5,7 @@ from Deck import *
 class Game:
     allGames = {}
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    nightOder = ["Doppleganger","Werewolf","Minion","Mason","Seer","Robber","Troublemaker","Drunk","Insomniac"]
+    nightOrder = ["Doppleganger","Werewolf","Minion","Mason","Seer","Robber","Troublemaker","Drunk","Insomniac"]
     
     def __init__(self, gameID=None):
         if gameID == None:
