@@ -171,7 +171,7 @@ class Werewolf(Card):
     def performNightAction(self):
         otherWerewolves = [player.name for player in self.game().findCardholders("Werewolf") if player.name != self.cardholder.name]
         if len(otherWerewolves) == 0:
-            self.cardholder.knowledge = "There are no other werewolves in this game. When you looked in the center, you saw the " + self.params["pocket card"].name + " card"
+            self.cardholder.knowledge = "There are no other werewolves in this game. When you looked in the center, you saw the " + self.deck().pocket[self.params["pocket card"]].name + " card"
         elif len(otherWerewolves) == 1:
             self.cardholder.knowledge = "The only other werewolf is " + otherWerewolves[0]
         else:
