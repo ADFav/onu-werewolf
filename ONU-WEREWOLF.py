@@ -1,5 +1,12 @@
 from Game import *
 from Player import *
+from copy import *
+
+def prettyprint(s,l,d=" "):
+    result = s
+    for i in xrange(l - len(s)):
+        result += d
+    return result
 
 game = Game("AAAA")
 
@@ -13,8 +20,10 @@ game.deck.cards = game.deck.randomHand(15)
 game.deck.shuffle()
 game.deck.fillPocket()
 
+initialPocket = deepcopy(game.deck.pocket)
+
 for player in players:
-    game.dealPlayerCard(player,game.deck.dealOneCard())
+    game.dealPlayerCard(player)#game.deck.dealOneCard())
     
 for player in players:
     print "Player " + player.name + ", you were dealt the " + player.initialCard.name + " card"
@@ -22,12 +31,18 @@ for player in players:
     player.initialCard.nightAction()
     print ""
 
+pocketparams = {"M":"Middle","L":"Left","R":"Right"}
+
 game.performNightActions()
 
+print "NAME" + "|" + prettyprint("Initial",15) + "|" + prettyprint("Final",15) + "|" + "Knowledge"
+print prettyprint("",4,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",10,"-")
 for player in players:
-    print "Player " + player.name + ", you now know: " + player.knowledge
-
-
+    # print "Player " + player.name + ", you now know: " + player.knowledge
+    print prettyprint(player.name,4) + "|" + prettyprint(player.initialCard.name,15) + "|" + prettyprint(player.finalCard.name,15) + "|" + player.knowledge
+print prettyprint("",4,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",10,"-")
+for param in pocketparams:
+    print prettyprint(param,4) + "|" + prettyprint(initialPocket[pocketparams[param]].name,15) + "|" + prettyprint(game.deck.pocket[pocketparams[param]].name,15) + "|"
 
 # cardSelect = None
 # while(cardSelect != "x"):
