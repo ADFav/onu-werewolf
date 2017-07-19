@@ -20,34 +20,6 @@ class Card:
     def deck(self):
         return self.game().deck
     
-    def players(self):
-        return self.game().players.keys()
-        
-    def getPlayer(self,playerName):
-        return self.game().players[playerName]
-    
-    def selectPlayers(self, text = "Pick your player", notThisPlayer = []):
-        tmpPlayers = [player for player in self.players() if player not in notThisPlayer]
-        for player in tmpPlayers:
-            print "--- " + player
-        choice = raw_input(text + "\n")
-        if choice in tmpPlayers:
-            return self.getPlayer(choice)
-        else:
-            print "Not a valid choice!"
-            return self.selectPlayers(text, notThisPlayer)
-    
-    def selectPocket(self, text, notThisCard=[]):
-        tmpPocket = {pos:card for pos,card in self.deck().pocket.iteritems() if pos not in notThisCard}
-        for pos in tmpPocket.keys():
-            print "--- " + pos
-        choice = raw_input(text + "\n")
-        if choice in tmpPocket.keys():
-            return choice
-        else:
-            print "Not a valid choice!"
-            return self.selectPocket(text,notThisCard)
-
 class Tanner(Card):        
     def __init__(self):
         Card.__init__(self,"Tanner","Tanner")
@@ -67,7 +39,7 @@ class Mason(Card):
     def performNightAction(self):
         otherMason = [player.name for player in self.game().findCardholders("Mason") if player.name != self.cardholder.name]
         if otherMason == []:
-            self.cardholder.knowledge = "Sorry, there is no other mason in the game"
+            self.cardholder.knowledge = "Sorry, there is no other mason in the game."
         else:
             if len(otherMason) == 1:
                 self.cardholder.knowledge = "The other mason is " + otherMason[0] + "."
@@ -79,11 +51,11 @@ class Robber(Card):
         Card.__init__(self,"Robber", "Villager")
     
     def nightAction(self):
-        self.params["victim"] = self.selectPlayers("Pick your Victim",[self.cardholder.name])
+        self.params["victim"] = self.game().selectPlayers("Pick your Victim",[self.cardholder.name])
     
     def performNightAction(self):
         if self.params == {}:
-            self.cardholder.knowledge = "You did not steal any card"
+            self.cardholder.knowledge = "You did not steal any card."
         else:
             mycard = self.cardholder.finalCard
             victimscard = self.params["victim"].finalCard 
@@ -91,20 +63,20 @@ class Robber(Card):
             self.params["victim"].finalCard = mycard
             self.cardholder.finalCard = victimscard
             
-            self.cardholder.knowledge = "You stole the " + victimscard.name + " card from " + self.params["victim"].name
+            self.cardholder.knowledge = "You stole the " + victimscard.name + " card from " + self.params["victim"].name +"."
 
 class Troublemaker(Card):
     def __init__(self):
         Card.__init__(self,"Troublemaker", "Villager")
     
     def nightAction(self):
-        self.params["victim 1"] = self.selectPlayers("Pick your First Victim",[self.cardholder.name])
-        self.params["victim 2"] = self.selectPlayers("Pick your Second Victim",[self.cardholder.name, self.params["victim 1"].name])
+        self.params["victim 1"] = self.game().selectPlayers("Pick your First Victim",[self.cardholder.name])
+        self.params["victim 2"] = self.game().selectPlayers("Pick your Second Victim",[self.cardholder.name, self.params["victim 1"].name])
 
     
     def performNightAction(self):
         if self.params == {}:
-            self.cardholder.knowledge = "You did swap any cards"
+            self.cardholder.knowledge = "You did not swap any cards."
         else:
             victim1card = self.params["victim 1"].finalCard
             victim2card = self.params["victim 2"].finalCard
@@ -112,14 +84,14 @@ class Troublemaker(Card):
             self.params["victim 1"].finalCard = victim2card
             self.params["victim 2"].finalCard = victim1card
             
-            self.cardholder.knowledge = "You swapped " + self.params["victim 1"].name + "'s and " + self.params["victim 2"].name + "'s cards"
+            self.cardholder.knowledge = "You swapped " + self.params["victim 1"].name + "'s and " + self.params["victim 2"].name + "'s cards."
 
 class Drunk(Card):
     def __init__(self):
         Card.__init__(self,"Drunk","Villager")
     
     def nightAction(self):
-        self.params["endpoint"] = self.selectPocket("Which center card do you want to switch with?")
+        self.params["endpoint"] = self.game().selectPocket("Which center card do you want to switch with?")
     
     def performNightAction(self):
         mycard = self.cardholder.finalCard
@@ -136,7 +108,7 @@ class Insomniac(Card):
         Card.__init__(self,"Insomniac","Villager")
     
     def performNightAction(self):
-        self.cardholder.knowledge = "Your final card is " + self.cardholder.finalCard.name
+        self.cardholder.knowledge = "Your final card is " + self.cardholder.finalCard.name +" card."
 
 class Seer(Card):
     def __init__(self):
@@ -147,15 +119,17 @@ class Seer(Card):
         print "--- Player"
         choice = raw_input("Where do you want to look?\n")
         if choice == "Center":
-            self.params["center 1"] = self.selectPocket("Which center card would you like to see?")
-            self.params["center 2"] = self.selectPocket("Which other center card would you like to see?",[self.params["center 1"]])
+            self.params["center 1"] = self.game().selectPocket("Which center card would you like to see?")
+            self.params["center 2"] = self.game().selectPocket("Which other center card would you like to see?",[self.params["center 1"]])
         elif choice == "Player":
-            self.params["victim"] = self.selectPlayers("Whose card would you like to see?",[self.cardholder.name])
+            self.params["victim"] = self.game().selectPlayers("Whose card would you like to see?",[self.cardholder.name])
         else:
             print "That's an invalid choice!"
             return self.nightAction()
             
     def performNightAction(self):
+        if self.params == {}:
+            self.cardholder.knowledge = "You did not look at any cards."
         if "victim" in self.params.keys():
             self.cardholder.knowledge = "You saw that " + self.params["victim"].name + " had the " + self.params["victim"].finalCard.name + " card."
         if "center 1" in self.params.keys():
@@ -166,14 +140,18 @@ class Werewolf(Card):
         Card.__init__(self,"Werewolf","Werewolf")
     
     def nightAction(self):
-        self.params["pocket card"] = self.selectPocket("If you are the lone wolf, which center card will you view?")
+        self.params["pocket card"] = self.game().selectPocket("If you are the lone wolf, which center card will you view?")
  
     def performNightAction(self):
         otherWerewolves = [player.name for player in self.game().findCardholders("Werewolf") if player.name != self.cardholder.name]
         if len(otherWerewolves) == 0:
-            self.cardholder.knowledge = "There are no other werewolves in this game. When you looked at the " + self.params["pocket card"] + " center, you saw the " + self.deck().pocket[self.params["pocket card"]].name + " card"
+            self.cardholder.knowledge = "There are no other werewolves in this game."
+            if "pocket card" in self.params:
+                self.cardholder.knowledge += " When you looked at the " + self.params["pocket card"] + " center, you saw the " + self.deck().pocket[self.params["pocket card"]].name + " card."
+            if self.params == {}:
+                self.cardholder.knowledge += " You did not look at any center cards."
         elif len(otherWerewolves) == 1:
-            self.cardholder.knowledge = "The only other werewolf is " + otherWerewolves[0]
+            self.cardholder.knowledge = "The only other werewolf is " + otherWerewolves[0] +"."
         else:
             self.cardholder.knowledge = "The other werewolves are " + ", ".join(otherWerewolves) + "."
         
