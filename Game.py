@@ -5,7 +5,7 @@ from Deck import *
 class Game:
     allGames = {}
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    nightOrder = ["Doppleganger","Werewolf","Minion","Mason","Seer","Robber","Troublemaker","Drunk","Insomniac"]
+    nightOrder = ["Doppleganger","Werewolf","Mystic Wolf","Minion","Mason","Seer","Apprentice Seer","Witch","Paranormal Investigator","Robber","Troublemaker","Drunk","Insomniac","Revealer","Curator"]
     
     def __init__(self, gameID=None):
         if gameID == None:
@@ -17,6 +17,8 @@ class Game:
         self.deck = Deck()
         self.votes = {}
         self.mostVoted = []
+        self.artifacts = ["Muting","Shame","Nothingness","Werewolf","Tanner","Villager"]
+    
         
     def __del__(self):
         return 0
@@ -30,11 +32,6 @@ class Game:
         
     def addPlayer(self,player):
         self.players[player.name] = player
-    
-    def listAllPlayers(self):
-        for player in self.players:
-            print player
-        return 0
         
     def dealPlayerCard(self,player):
         card = self.deck.dealOneCard()
@@ -85,11 +82,11 @@ class Game:
         
     def winner(self):
         self.mostVoted = [player if player.finalCard.name != "Hunter" else self.players[self.votes[player.name]] for player in self.mostVoted]
-        killedWolves   = [player for player in self.mostVoted        if player.finalCard.team == "Werewolf" and player.finalCard.name != "Minion"]
-        wolvesInGame   = [player for player in self.players.values() if player.finalCard.team == "Werewolf" and player.finalCard.name != "Minion"]
+        killedWolves   = [player for player in self.mostVoted        if player.finalCard.isWolf]
+        wolvesInGame   = [player for player in self.players.values() if player.finalCard.isWolf]
         killedTanners  = [player for player in self.mostVoted        if player.finalCard.team == "Tanner"]
-        killedMinions  = [player for player in self.mostVoted        if player.finalCard.team == "Werewolf" and player.finalCard.name == "Minion"]
-        minionsInGame  = [player for player in self.players.values() if player.finalCard.team == "Werewolf" and player.finalCard.name == "Minion"]
+        killedMinions  = [player for player in self.mostVoted        if player.finalCard.name == "Minion"]
+        minionsInGame  = [player for player in self.players.values() if player.finalCard.name == "Minion"]
         result = set([])
         
         if killedTanners != []:
@@ -102,10 +99,14 @@ class Game:
             result.add("Werewolves")
         if wolvesInGame == [] and minionsInGame != [] and self.mostVoted != [] and killedMinions == [] and killedTanners == []:
             result.add("Werewolves")
-        
         return result
-        
-        
+    
+    def findWolves(self):
+        return [player for player in self.players.values() if player.finalCard.isWolf]
+    
+    def findMasons(self):
+        return [player for player in self.players.values() if player.finalCard.isMason]
+    
     def endGame(self):
         Game.allGames.pop(self.gameID,None)
         for player in self.players:

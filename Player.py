@@ -6,7 +6,7 @@ class Player:
         self.game = None
         self.initialCard = None
         self.finalCard = None
-        self.knowledge = "You learned nothing during the night."
+        self.knowledge = ""
         
     def joinGame(self,gameID):
         try:
@@ -15,5 +15,9 @@ class Player:
         except KeyError:
             print "I'm sorry, there is no game with that ID, please try again"
     
+    def updateKnowledge(self,newKnowledge):
+        self.knowledge += newKnowledge
+    
     def castVote(self, vote):
         self.game.votes[self.name] = vote
+        

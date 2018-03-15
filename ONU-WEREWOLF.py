@@ -34,7 +34,6 @@ for player in players:
 pocketparams = {"M":"Middle","L":"Left","R":"Right"}
 
 game.performNightActions()
-
 print "NAME" + "|" + prettyprint("Initial",15) + "|" + prettyprint("Final",15) + "|" + "Knowledge"
 print prettyprint("",4,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",10,"-")
 for player in players:
@@ -43,6 +42,18 @@ for player in players:
 print prettyprint("",4,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",10,"-")
 for param in pocketparams:
     print prettyprint(param,4) + "|" + prettyprint(initialPocket[pocketparams[param]].name,15) + "|" + prettyprint(game.deck.pocket[pocketparams[param]].name,15) + "|"
+
+print ""
+print ""
+
+game.collectVotes()
+game.tallyVotes()
+
+print "NAME" + "|" + prettyprint("Final Card",15) + "|" + prettyprint("Team",15) + "|"
+print prettyprint("",4,"-") + "+" + prettyprint("",15,"-") + "+" + prettyprint("",15,"-") + "|"
+for player in game.mostVoted:
+    # print "Player " + player.name + ", you now know: " + player.knowledge
+    print prettyprint(player.name,4) + "|" + prettyprint(player.finalCard.name,15) + "|" + prettyprint(player.finalCard.team,15) + "|"
 
 # cardSelect = None
 # while(cardSelect != "x"):

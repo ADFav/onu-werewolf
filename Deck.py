@@ -3,7 +3,7 @@ import random
 
 class Deck:
     def __init__(self):
-        self.possibleCards = [Werewolf(), Werewolf(), Minion(), Drunk(), Seer(), Villager(),Villager(),Villager(),Mason(),Mason(),Hunter(),Tanner(),Robber(),Troublemaker(),Insomniac()]
+        self.possibleCards = [DreamWolf(), MysticWolf(), Doppleganger(), Werewolf(), Werewolf(), Minion(), Drunk(), Seer(), Villager(),Villager(),Villager(),Mason(),Mason(),Hunter(),Tanner(),Robber(),Troublemaker(),Insomniac(),Witch(),ParanormalInvestigator()]
         self.cards = []
         self.pocket = {"Left":None, "Middle":None, "Right":None}
         self.dealCount = 0
